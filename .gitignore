@@ -5,6 +5,16 @@ lib/
 bin/
 data/
 
+# rosbag
+*.bag
+*.db3
+*.mcap
+
+# ros2 bag folder
+*.bag/
+*_0.db3
+
+
 *.log
 *.cmake
 # 编辑器配置文件
