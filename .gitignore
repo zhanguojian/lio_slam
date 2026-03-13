@@ -3,9 +3,7 @@ install/
 log/
 lib/
 bin/
-
-data/bag
-*.bag
+data/
 
 # 编辑器配置文件
 .vscode/
