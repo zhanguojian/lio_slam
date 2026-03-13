@@ -1,0 +1,16 @@
+build/
+install/
+log/
+
+data/bag
+*.bag
+
+# 编辑器配置文件
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# 临时系统文件
+.DS_Store
+Thumbs.db
