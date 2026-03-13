@@ -93,6 +93,7 @@ class RosbagIO {
     using GNSSHandle = std::function<bool(GNSSPtr)>;
     using OdomHandle = std::function<bool(const Odom &)>;
 
+    using Scan2DHandle = std::function<bool(Scan2d::Ptr)>;
     // 遍历文件内容，调用回调函数
     void Go();
 
@@ -117,6 +118,12 @@ class RosbagIO {
         return *this;
     }
 
+    //scan 2d
+    RosbagIO &AddScan2DHandle(const std::string &topic_name, Scan2DHandle f) {
+    scan2d_handles_.emplace(topic_name, f);
+    return *this;
+}
+    
     /// 清除现有的处理函数
     void CleanProcessFunc() {
         scan2d_handles_.clear();

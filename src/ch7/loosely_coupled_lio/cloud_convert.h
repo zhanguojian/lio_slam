@@ -52,6 +52,7 @@ class CloudConvert {
         AVIA = 1,  // 大疆的固态雷达
         VELO32,    // Velodyne 32线
         OUST64,    // ouster 64线
+        LIVOX      // Livox 雷达
     };
 
     CloudConvert() = default;
@@ -77,11 +78,13 @@ class CloudConvert {
    private:
     void AviaHandler(const livox_ros_driver2::CustomMsg::SharedPtr &msg);
     void AviaPointCloud2Handler(const sensor_msgs::msg::PointCloud2::SharedPtr &msg);
+    void LivoxHandler(const livox_ros_driver2::CustomMsg::SharedPtr &msg);
+    void LivoxPointCloud2Handler(const sensor_msgs::msg::PointCloud2::SharedPtr &msg);
     void Oust64Handler(const sensor_msgs::msg::PointCloud2::SharedPtr &msg);
     void VelodyneHandler(const sensor_msgs::msg::PointCloud2::SharedPtr &msg);
 
     FullPointCloudType cloud_full_, cloud_out_;  // 输出点云
-    LidarType lidar_type_ = LidarType::AVIA;     // 雷达类型
+    LidarType lidar_type_ = LidarType::LIVOX;     // 雷达类型
     int point_filter_num_ = 1;                   // 跳点
     int num_scans_ = 6;                          // 扫描线数
     float time_scale_ = 1e-3;                    // 雷达点的时间字段与秒的比例

@@ -22,36 +22,36 @@ using MultiScan2d = sensor_msgs::msg::MultiEchoLaserScan;
 
 namespace sad {
 
-/// 将MultiEchoLaserScan转换为LaserScan
-// inline Scan2d::SharedPtr MultiToScan2d(MultiScan2d::SharedPtr mscan) {
-//     auto scan = std::make_shared<Scan2d>();
-//     scan->header = mscan->header;
-//     scan->range_max = mscan->range_max;
-//     scan->range_min = mscan->range_min;
-//     scan->angle_increment = mscan->angle_increment;
-//     scan->angle_max = mscan->angle_max;
-//     scan->angle_min = mscan->angle_min;
-//     for (auto r : mscan->ranges) {
-//         if (r.echoes.empty()) {
-//             scan->ranges.emplace_back(scan->range_max + 1.0);
-//         } else {
-//             scan->ranges.emplace_back(r.echoes[0]);
-//         }
-//     }
-//     for (auto i : mscan->intensities) {
-//         if (i.echoes.empty()) {
-//             scan->intensities.emplace_back(0);
-//         } else {
-//             scan->intensities.emplace_back(i.echoes[0]);
-//         }
-//     }
-//     scan->scan_time = mscan->scan_time;
-//     scan->time_increment = mscan->time_increment;
+// 将MultiEchoLaserScan转换为LaserScan
+inline Scan2d::SharedPtr MultiToScan2d(MultiScan2d::SharedPtr mscan) {
+    auto scan = std::make_shared<Scan2d>();
+    scan->header = mscan->header;
+    scan->range_max = mscan->range_max;
+    scan->range_min = mscan->range_min;
+    scan->angle_increment = mscan->angle_increment;
+    scan->angle_max = mscan->angle_max;
+    scan->angle_min = mscan->angle_min;
+    for (auto r : mscan->ranges) {
+        if (r.echoes.empty()) {
+            scan->ranges.emplace_back(scan->range_max + 1.0);
+        } else {
+            scan->ranges.emplace_back(r.echoes[0]);
+        }
+    }
+    for (auto i : mscan->intensities) {
+        if (i.echoes.empty()) {
+            scan->intensities.emplace_back(0);
+        } else {
+            scan->intensities.emplace_back(i.echoes[0]);
+        }
+    }
+    scan->scan_time = mscan->scan_time;
+    scan->time_increment = mscan->time_increment;
 
-//     // limit range max
-//     scan->range_max = 20.0;
-//     return scan;
-// }
+    // limit range max
+    scan->range_max = 20.0;
+    return scan;
+}
 
 /// ROS2 PointCloud2 转通常的pcl PointCloud
 inline CloudPtr PointCloud2ToCloudPtr(sensor_msgs::msg::PointCloud2::SharedPtr msg) {

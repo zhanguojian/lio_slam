@@ -51,6 +51,10 @@ void CloudConvert::Process(const sensor_msgs::msg::PointCloud2::SharedPtr &msg, 
             VelodyneHandler(msg);
             break;
 
+        case LidarType::LIVOX:
+            LivoxPointCloud2Handler(msg);
+            break;
+
         default:
             cloud_out_.clear();
             cloud_full_.clear();
@@ -58,6 +62,105 @@ void CloudConvert::Process(const sensor_msgs::msg::PointCloud2::SharedPtr &msg, 
             break;
     }
     *pcl_out = cloud_out_;
+}
+void CloudConvert::LivoxHandler(const livox_ros_driver2::CustomMsg::SharedPtr &msg) {
+    cloud_out_.clear();
+    cloud_full_.clear();
+    int plsize = msg->point_num;
+
+    cloud_out_.reserve(plsize);
+    cloud_full_.resize(plsize);
+
+    std::vector<bool> is_valid_pt(plsize, false);
+    std::vector<uint> index(plsize - 1);
+    for (uint i = 0; i < plsize - 1; ++i) {
+        index[i] = i + 1;  // 从1开始
+    }
+
+    std::for_each(std::execution::par_unseq, index.begin(), index.end(), [&](const uint &i) {
+        if ((msg->points[i].line < num_scans_) &&
+            ((msg->points[i].tag & 0x30) == 0x10 || (msg->points[i].tag & 0x30) == 0x00)) {
+            if (i % point_filter_num_ == 0) {
+                cloud_full_[i].x = msg->points[i].x;
+                cloud_full_[i].y = msg->points[i].y;
+                cloud_full_[i].z = msg->points[i].z;
+                cloud_full_[i].intensity = msg->points[i].reflectivity;
+                cloud_full_[i].time = msg->points[i].offset_time / float(1000000);
+
+                if ((abs(cloud_full_[i].x - cloud_full_[i - 1].x) > 1e-7) ||
+                    (abs(cloud_full_[i].y - cloud_full_[i - 1].y) > 1e-7) ||
+                    (abs(cloud_full_[i].z - cloud_full_[i - 1].z) > 1e-7)) {
+                    is_valid_pt[i] = true;
+                }
+            }
+        }
+    });
+
+    for (uint i = 1; i < plsize; i++) {
+        if (is_valid_pt[i]) {
+            cloud_out_.points.push_back(cloud_full_[i]);
+        }
+    }
+}
+
+void CloudConvert::LivoxPointCloud2Handler(const sensor_msgs::msg::PointCloud2::SharedPtr &msg) {
+    cloud_out_.clear();
+    cloud_full_.clear();
+
+    pcl::PointCloud<avia_ros::Point> pl_orig;
+    pcl::fromROSMsg(*msg, pl_orig);
+    const int plsize = static_cast<int>(pl_orig.size());
+    if (plsize <= 1) {
+        return;
+    }
+
+    cloud_out_.reserve(plsize);
+    cloud_full_.resize(plsize);
+
+    const double first_timestamp = pl_orig.points.front().timestamp;
+    std::vector<bool> is_valid_pt(plsize, false);
+    std::vector<uint> index(plsize - 1);
+    for (uint i = 0; i < plsize - 1; ++i) {
+        index[i] = i + 1;
+    }
+
+    std::for_each(std::execution::par_unseq, index.begin(), index.end(), [&](const uint &i) {
+        const auto& src = pl_orig.points[i];
+        if ((src.line < num_scans_) && ((src.tag & 0x30) == 0x10 || (src.tag & 0x30) == 0x00)) {
+            if (i % point_filter_num_ == 0) {
+                cloud_full_[i].x = src.x;
+                cloud_full_[i].y = src.y;
+                cloud_full_[i].z = src.z;
+                cloud_full_[i].intensity = static_cast<uint8_t>(std::clamp(src.intensity, 0.0f, 255.0f));
+                cloud_full_[i].ring = src.line;
+                cloud_full_[i].time = (src.timestamp - first_timestamp) * 1e-6;
+
+                if ((std::abs(cloud_full_[i].x - pl_orig.points[i - 1].x) > 1e-7) ||
+                    (std::abs(cloud_full_[i].y - pl_orig.points[i - 1].y) > 1e-7) ||
+                    (std::abs(cloud_full_[i].z - pl_orig.points[i - 1].z) > 1e-7)) {
+                    is_valid_pt[i] = true;
+                }
+            }
+        }
+    });
+
+    for (uint i = 1; i < plsize; ++i) {
+        if (is_valid_pt[i]) {
+            cloud_out_.points.push_back(cloud_full_[i]);
+        }
+    }
+
+    // #region agent log
+    {
+        const double last_relative_ms = cloud_out_.empty() ? 0.0 : cloud_out_.back().time;
+        std::ostringstream data;
+        data << "{\"inputPoints\":" << plsize << ",\"outputPoints\":" << cloud_out_.size()
+             << ",\"firstTimestamp\":" << first_timestamp
+             << ",\"lastRelativeMs\":" << last_relative_ms << "}";
+        AppendDebugLog("src/ch7/loosely_coupled_lio/cloud_convert.cc:111", "Parsed AVIA PointCloud2", data.str(),
+                       "post-fix", "H3");
+    }
+    // #endregion
 }
 
 void CloudConvert::AviaHandler(const livox_ros_driver2::CustomMsg::SharedPtr &msg) {
