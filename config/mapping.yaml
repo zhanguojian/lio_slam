@@ -1,5 +1,5 @@
 YAML: 1.0
-bag_path: /home/leoz/桌面/lio_slam/data/bag/rosbag2_2026_01_23-10_04_57
+bag_path: /home/zgj/桌面/lio_slam/data/bag/rosbag2_2026_01_05-16_26_37
 lio_yaml: ./config/livox.yaml
 map_data: ./data/ch9/map_data/
 origin:
