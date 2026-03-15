@@ -1,9 +1,8 @@
 //
-// Created by xiang on 2021/7/19.
+// Modified by guojian on 2026/3/15.
 //
 
-#ifndef MAPPING_IMU_H
-#define MAPPING_IMU_H
+#pragma once
 
 #include <memory>
 #include "common/eigen_types.h"
@@ -23,4 +22,3 @@ struct IMU {
 
 using IMUPtr = std::shared_ptr<sad::IMU>;
 
-#endif  // MAPPING_IMU_H

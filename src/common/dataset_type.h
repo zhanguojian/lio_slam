@@ -1,9 +1,10 @@
 //
-// Created by xiang on 22-8-16.
+// Modified by guojian on 2026/3/15.
+//
 //
 
-#ifndef SLAM_IN_AUTO_DRIVING_DATASET_TYPE_H
-#define SLAM_IN_AUTO_DRIVING_DATASET_TYPE_H
+#pragma once
+
 
 namespace sad {
 
@@ -67,4 +68,3 @@ const std::string livox_imu_topic = "/livox/imu";
 const std::string livox_lidar_topic = "/livox/lidar";
 }  // namespace sad
 
-#endif  // SLAM_IN_AUTO_DRIVING_DATASET_TYPE_H

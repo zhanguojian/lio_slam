@@ -1,10 +1,9 @@
 //
-// Created by xiang on 2022/1/4.
-// Modified for ROS2 Humble
+// Modified by guojian on 2026/3/15.
+//
 //
 
-#ifndef SLAM_IN_AUTO_DRIVING_GNSS_H
-#define SLAM_IN_AUTO_DRIVING_GNSS_H
+#pragma once
 
 #include "common/eigen_types.h"
 #include "common/message_def.h"
@@ -74,4 +73,3 @@ struct GNSS {
 
 using GNSSPtr = std::shared_ptr<sad::GNSS>;
 
-#endif  // SLAM_IN_AUTO_DRIVING_GNSS_H

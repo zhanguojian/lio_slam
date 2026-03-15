@@ -1,9 +1,11 @@
 //
-// Created by xiang on 2021/7/19.
+// Modified by guojian on 2026/3/15.
+//
 //
 
-#ifndef SAD_NAV_STATE_H
-#define SAD_NAV_STATE_H
+#pragma once
+
+
 
 #include <sophus/so3.hpp>
 #include "common/eigen_types.h"
@@ -55,4 +57,3 @@ using NavStatef = NavState<float>;
 
 }  // namespace sad
 
-#endif

@@ -1,9 +1,8 @@
 //
-// Created by xiang on 2021/8/18.
+// modified by guojian on 2026/3/15.
 //
 
-#ifndef SLAM_IN_AUTO_DRIVING_POINT_TYPES_H
-#define SLAM_IN_AUTO_DRIVING_POINT_TYPES_H
+#pragma once
 
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
@@ -77,8 +76,8 @@ using UiCloudPtr = UiPointCloudType::Ptr;
 }  // namespace sad
 
 POINT_CLOUD_REGISTER_POINT_STRUCT(sad::FullPointType,
-                                  (float, x, x)(float, y, y)(float, z, z)(std::uint8_t, intensity, intensity)(
-                                      std::uint8_t, ring, ring)(double, time, time))
+                                  (float, x, x)(float, y, y)(float, z, z)(std::uint16_t, intensity, intensity)(
+                                      std::uint16_t, ring, ring)(double, time, time))
 
  
 namespace avia_ros {
@@ -151,4 +150,3 @@ POINT_CLOUD_REGISTER_POINT_STRUCT(velodyne_ros::Point,
 
 
 // clang-format on
-#endif  // SLAM_IN_AUTO_DRIVING_POINT_TYPES_H

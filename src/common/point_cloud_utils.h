@@ -1,9 +1,8 @@
 //
-// Created by xiang on 2021/8/25.
+// Modified by guojian on 2026/3/15.
 //
 
-#ifndef SLAM_IN_AUTO_DRIVING_POINT_CLOUD_UTILS_H
-#define SLAM_IN_AUTO_DRIVING_POINT_CLOUD_UTILS_H
+#pragma once
 
 #include "common/point_types.h"
 
@@ -23,4 +22,3 @@ void SaveCloudToFile(const std::string &filePath, CloudType &cloud);
 
 }  // namespace sad
 
-#endif  // SLAM_IN_AUTO_DRIVING_POINT_CLOUD_UTILS_H

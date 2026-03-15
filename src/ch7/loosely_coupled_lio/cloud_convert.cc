@@ -8,33 +8,35 @@
 #include <sstream>
 #include <yaml-cpp/yaml.h>
 
-namespace {
-
-void AppendDebugLog(const char* location, const char* message, const std::string& data, const char* run_id,
-                    const char* hypothesis_id) {
-    std::ofstream fout("/home/leoz/桌面/lio_slam/.cursor/debug.log", std::ios::app);
-    if (!fout) {
-        return;
-    }
-    const auto now = std::chrono::duration_cast<std::chrono::milliseconds>(
-                         std::chrono::system_clock::now().time_since_epoch())
-                         .count();
-    fout << "{\"id\":\"log_" << now << "_" << hypothesis_id << "\","
-         << "\"timestamp\":" << now << ","
-         << "\"location\":\"" << location << "\","
-         << "\"message\":\"" << message << "\","
-         << "\"data\":" << data << ","
-         << "\"runId\":\"" << run_id << "\","
-         << "\"hypothesisId\":\"" << hypothesis_id << "\"}\n";
-}
-
-}  // namespace
+// namespace
 
 namespace sad {
 
 void CloudConvert::Process(const livox_ros_driver2::CustomMsg::SharedPtr &msg, FullCloudPtr &pcl_out) {
-    AviaHandler(msg);
-    *pcl_out = cloud_out_;
+    switch (lidar_type_) {
+        case LidarType::AVIA:
+            AviaPointCloud2Handler(msg);
+            break;
+
+        case LidarType::OUST64:
+            Oust64Handler(msg);
+            break;
+
+        case LidarType::VELO32:
+            VelodyneHandler(msg);
+            break;
+
+        case LidarType::LIVOX:
+            LivoxPointCloud2Handler(msg);
+            break;
+
+        default:
+            cloud_out_.clear();
+            cloud_full_.clear();
+            LOG(ERROR) << "Error LiDAR Type: " << int(lidar_type_);
+            break;
+    } 
+   *pcl_out = cloud_out_;
 }
 
 void CloudConvert::Process(const sensor_msgs::msg::PointCloud2::SharedPtr &msg, FullCloudPtr &pcl_out) {

@@ -1,7 +1,10 @@
 //
-// Created by xiang on 2021/7/20.
-// Modified for ROS2 Humble
+// Modified by guojian on 2026/3/15.
 //
+//
+
+
+
 #include "common/io_utils.h"
 #include "ch3/utm_convert.h"
 #include "dataset_type.h"
@@ -157,6 +160,10 @@ RosbagIO &RosbagIO::AddAutoPointCloudHandle(PointCloud2Handle f) {
         // WXB 需要 Velodyne packets 解析
         LOG(WARNING) << "WXB_3D dataset requires Velodyne packets handling - not yet implemented for ROS2";
         return *this;
+    } else if (dataset_type_ == DatasetType::LIVOX) {
+        // WXB 需要 Velodyne packets 解析
+        LOG(WARNING) << "WXB_3D dataset requires Velodyne packets handling - not yet implemented for ROS2";
+        return *this;        
     } else {
         return AddPointCloud2Handle(GetLidarTopicName(), f);
     }

@@ -1,10 +1,8 @@
 //
-// Created by xiang on 2022/3/15.
-// Modified for ROS2 Humble
+// Modified by guojian on 2026/3/15.
+// 
 //
-
-#ifndef SLAM_IN_AUTO_DRIVING_LIDAR_UTILS_H
-#define SLAM_IN_AUTO_DRIVING_LIDAR_UTILS_H
+#pragma once
 
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <sensor_msgs/msg/multi_echo_laser_scan.hpp>
@@ -100,4 +98,3 @@ inline Eigen::Matrix<int, n, 1> CastToInt(const Eigen::Matrix<S, n, 1>& value) {
 
 }  // namespace sad
 
-#endif  // SLAM_IN_AUTO_DRIVING_LIDAR_UTILS_H

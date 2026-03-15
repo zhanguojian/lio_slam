@@ -1,10 +1,10 @@
 //
-// Created by xiang on 2021/7/20.
-// Modified for ROS2 Humble
+// Modified by guojian on 2026/3/15.
+//
 //
 
-#ifndef SLAM_IN_AUTO_DRIVING_IO_UTILS_H
-#define SLAM_IN_AUTO_DRIVING_IO_UTILS_H
+#pragma once
+
 
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp/serialization.hpp>
@@ -97,13 +97,13 @@ class RosbagIO {
     // 遍历文件内容，调用回调函数
     void Go();
 
-    /// 根据数据集类型自动确定topic名称
-    RosbagIO &AddAutoPointCloudHandle(PointCloud2Handle f);
-
     /// 根据数据集自动处理RTK消息
     RosbagIO &AddAutoRTKHandle(GNSSHandle f);
 
-    /// point cloud 2 的处理
+    /// point cloud 2 
+    RosbagIO &AddAutoPointCloudHandle(PointCloud2Handle f);
+
+    /// point cloud 2 的处理 point cloud 2 with specific topic name
     RosbagIO &AddPointCloud2Handle(const std::string &topic_name, PointCloud2Handle f) {
         pc2_handles_.emplace(topic_name, f);
         return *this;
@@ -161,4 +161,3 @@ class RosbagIO {
 
 }  // namespace sad
 
-#endif  // SLAM_IN_AUTO_DRIVING_IO_UTILS_H
